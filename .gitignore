@@ -1,0 +1,48 @@
+# secrets — NEVER commit
+.env
+.env.local
+*.env
+!.env.example
+
+# python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+*.egg-info/
+
+# local dev data / stub DB
+*.sqlite
+*.sqlite3
+backend/.tallyflow_local.db
+backend/local_storage/
+dead_letter_payloads/
+
+# real invoices — privacy (§13: never commit real/private docs)
+sample_docs/real/
+*.real.pdf
+*.real.png
+
+# node / dashboard
+node_modules/
+dashboard/dist/
+dashboard/.vite/
+
+# os / editor
+.DS_Store
+*.swp
+.idea/
+.vscode/
+
+# cloud env files — never commit
+cloudrun.env.yaml
+*.env.yaml
+
+# generated realistic test invoices (forward these; do not commit)
+realistic_invoices/
+
+# README visual capture (raw screenshots stay local; exported assets/*.png are committed)
+assets/screenshots/
+assets/node_modules/
+assets/package*.json

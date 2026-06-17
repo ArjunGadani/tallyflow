@@ -1,0 +1,37 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+body {
+  @apply bg-slate-50 text-slate-700 font-sans antialiased;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* tight, modern display type — Inter, not a rounded display face */
+.font-display {
+  @apply font-sans font-semibold tracking-tight text-slate-900;
+}
+
+/* tabular money */
+.tnum {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum';
+}
+
+/* skeleton shimmer */
+.skeleton {
+  @apply relative overflow-hidden bg-slate-100 rounded-lg;
+}
+.skeleton::after {
+  content: '';
+  @apply absolute inset-0 -translate-x-full animate-shimmer;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.85), transparent);
+}
+
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-thumb { @apply bg-slate-300 rounded-full; }
+::-webkit-scrollbar-thumb:hover { @apply bg-slate-400; }

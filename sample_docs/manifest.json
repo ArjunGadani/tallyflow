@@ -1,0 +1,75 @@
+[
+  {
+    "file": "01_clean_invoice.pdf",
+    "scenario": "clean_digital",
+    "doc_type": "invoice",
+    "expect": "new"
+  },
+  {
+    "file": "02_exact_duplicate.pdf",
+    "scenario": "exact_duplicate",
+    "expect": "exact_duplicate",
+    "of": "01_clean_invoice.pdf"
+  },
+  {
+    "file": "03_logical_duplicate.pdf",
+    "scenario": "logical_duplicate",
+    "expect": "logical_duplicate",
+    "of": "01_clean_invoice.pdf"
+  },
+  {
+    "file": "04_revision_v2.pdf",
+    "scenario": "revision",
+    "expect": "revision",
+    "supersedes": "01_clean_invoice.pdf"
+  },
+  {
+    "file": "05_credit_note.pdf",
+    "scenario": "credit_note",
+    "expect": "credit_note",
+    "credit_of": "INV-1001"
+  },
+  {
+    "file": "06_multi_invoice.pdf",
+    "scenario": "multi_invoice",
+    "expect": "split_into_2"
+  },
+  {
+    "file": "07_non_invoice.pdf",
+    "scenario": "non_invoice",
+    "expect": "non_invoice"
+  },
+  {
+    "file": "08_totals_mismatch.pdf",
+    "scenario": "totals_mismatch",
+    "expect": "needs_review"
+  },
+  {
+    "file": "09_ambiguous_date.pdf",
+    "scenario": "ambiguous_date",
+    "expect": "needs_review_or_flag"
+  },
+  {
+    "file": "10_foreign_currency.pdf",
+    "scenario": "foreign_currency",
+    "expect": "base_conversion",
+    "currency": "USD"
+  },
+  {
+    "file": "11_multi_tax_gst.pdf",
+    "scenario": "multi_tax",
+    "expect": "two_tax_lines",
+    "currency": "INR"
+  },
+  {
+    "file": "12_scanned_invoice.png",
+    "scenario": "scanned_image",
+    "expect": "vision_path",
+    "doc_type": "invoice"
+  },
+  {
+    "file": "13_corrupt.pdf",
+    "scenario": "corrupt",
+    "expect": "failed_or_dead_letter"
+  }
+]

@@ -1,0 +1,28 @@
+# Mirrors .gcloudignore — but applies to plain `docker build` too (.gcloudignore
+# only affects `gcloud` uploads). Keeps secrets + local data + deps/builds out of
+# the image so processed-invoice data is never baked in and cold starts stay slim.
+.git/
+.github/
+.venv/
+venv/
+__pycache__/
+*.pyc
+
+# secrets — never bake into the image
+.env
+.env.*
+*.env
+*.env.yaml
+cloudrun.env.yaml
+
+# frontend: source IS needed (Docker stage 1 builds it); skip deps + prior build
+node_modules/
+dashboard/node_modules/
+dashboard/dist/
+dashboard/.vite/
+
+# local-only data (real/processed invoices must never ship in the image)
+backend/local_storage/
+backend/.tallyflow_local.db
+sample_docs/real/
+dead_letter_payloads/

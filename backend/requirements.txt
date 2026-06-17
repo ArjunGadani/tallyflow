@@ -1,0 +1,40 @@
+# TallyFlow backend dependencies (Python 3.11)
+# Pinned to known-good stable lines; opencv/pillow/pdfplumber have 3.11 wheels.
+
+# --- web / api ---
+fastapi==0.115.6
+uvicorn[standard]==0.34.0
+python-multipart==0.0.20          # file upload on /api/ingest
+pydantic==2.10.4
+pydantic-settings==2.7.1          # env-driven config in ONE place (§0)
+python-dotenv==1.0.1
+
+# --- LLM (Groq: classify / extract / categorize ONLY) ---
+groq==0.18.0
+
+# --- document handling ---
+pdfplumber==0.11.5                # digital PDF text extraction
+pypdf==5.1.0                      # page split / merge
+pypdfium2==4.30.0                 # rasterize PDF pages -> images (no system deps)
+pillow==11.1.0                    # image preprocess
+opencv-python-headless==4.11.0.86 # rotate/deskew/enhance (headless = no GUI deps, Cloud-Run-safe)
+
+# --- deterministic logic ---
+rapidfuzz==3.11.0                 # vendor fuzzy match (string similarity, NOT LLM)
+python-dateutil==2.9.0.post0      # locale-aware date parsing
+
+# --- storage ---
+# Supabase Postgres via psycopg (atomic store_invoice RPC) + Storage via REST (httpx).
+# No supabase-py: it mishandles new-format sb_secret_* keys; we call the REST API directly.
+psycopg[binary]==3.2.3            # direct Postgres for ATOMIC store_invoice (R5)
+psycopg_pool==3.3.1               # connection pool: per-checkout conn, concurrency-safe
+
+# --- http (FX source, Slack webhook, Resend) ---
+httpx==0.28.1
+
+# --- test-doc generator (§13) + test fixtures ---
+reportlab==4.2.5
+
+# --- test ---
+pytest==8.3.4
+pytest-asyncio==0.25.0

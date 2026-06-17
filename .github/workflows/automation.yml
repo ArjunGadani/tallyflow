@@ -1,0 +1,52 @@
+# Scheduled ingestion + digest (§16.10).
+# Runs the pipeline INSIDE the runner (Q1) so Cloud Run stays cold and the shared
+# free tier is preserved. Hourly; also runnable on demand.
+name: tallyflow-automation
+
+on:
+  # NOTE: hourly ingestion runs via Google Cloud Scheduler -> POST /api/run on the
+  # Cloud Run service. GitHub-hosted runners are IPv4-only and CANNOT reach
+  # Supabase's direct (IPv6-only) DB endpoint, so the hourly schedule is disabled
+  # here. Kept for manual/optional runs (works if SUPABASE_DB_URL points at
+  # Supabase's IPv4 "session pooler" instead of the direct endpoint).
+  workflow_dispatch: {}           # manual trigger only
+
+concurrency:
+  group: tallyflow-run
+  cancel-in-progress: false       # never interrupt an in-flight run (idempotent, but tidy)
+
+jobs:
+  poll-and-digest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r backend/requirements.txt
+
+      - name: Poll inbox, process, digest
+        env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+          SUPABASE_STORAGE_BUCKET: ${{ secrets.SUPABASE_STORAGE_BUCKET }}
+          STORE_BACKEND: supabase
+          IMAP_HOST: ${{ secrets.IMAP_HOST }}
+          IMAP_USER: ${{ secrets.IMAP_USER }}
+          IMAP_PASSWORD: ${{ secrets.IMAP_PASSWORD }}
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          SMTP_HOST: ${{ secrets.SMTP_HOST }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASS: ${{ secrets.SMTP_PASS }}
+          DIGEST_TO: ${{ secrets.DIGEST_TO }}
+          DIGEST_FROM: ${{ secrets.DIGEST_FROM }}
+          BASE_CURRENCY: ${{ secrets.BASE_CURRENCY }}
+          DASHBOARD_URL: ${{ secrets.DASHBOARD_URL }}
+        run: python -m backend.run_cron
